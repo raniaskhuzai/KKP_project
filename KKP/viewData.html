@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Visualization</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        /* Add CSS styles here for better appearance */
+        .bar {
+            fill: steelblue;
+        }
+        .bar:hover {
+            fill: orange;
+        }
+        .axis-label {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Visualization</h1>
+    <svg id="chart"></svg>
+
+    <script>
+        var data = <?php echo json_encode($data); ?>;
+        var margin = { top: 20, right: 30, bottom: 40, left: 40 };
+        var width = 600 - margin.left - margin.right;
+        var height = 400 - margin.top - margin.bottom;
+
+        var svg = d3.select("#chart")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var x = d3.scaleBand()
+            .domain(data.map(function (d) { return d.color; }))
+            .range([0, width])
+            .padding(0.1);
+
+        var y = d3.scaleLinear()
+            .domain([0, d3.max(data, function (d) { return d.count; })])
+            .nice()
+            .range([height, 0]);
+
+        svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function (d) { return x(d.color); })
+            .attr("y", function (d) { return y(d.count); })
+            .attr("width", x.bandwidth())
+            .attr("height", function (d) { return height - y(d.count); });
+
+        svg.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        svg.append("g")
+            .attr("class", "y-axis")
+            .call(d3.axisLeft(y));
+
+        svg.selectAll(".x-axis text")
+            .attr("class", "axis-label")
+            .style("text-anchor", "middle");
+
+        svg.selectAll(".y-axis text")
+            .attr("class", "axis-label");
+
+    </script>
+</body>
+</html>

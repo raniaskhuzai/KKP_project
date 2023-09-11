@@ -1,0 +1,9 @@
+CREATE TABLE form_data (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    date DATE NOT NULL,
+    room VARCHAR(255) NOT NULL,
+    printer_brand VARCHAR(255) NOT NULL,
+    color VARCHAR(50) NOT NULL,
+    receiver VARCHAR(255) NOT NULL,
+    giver VARCHAR(255) NOT NULL
+);
